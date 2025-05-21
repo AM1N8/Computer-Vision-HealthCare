@@ -1,0 +1,20 @@
+name: chestxray-env-gpu
+channels:
+  - pytorch
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - numpy
+  - pandas
+  - matplotlib
+  - seaborn
+  - tqdm
+  - opencv
+  - pillow
+  - scikit-learn
+  - pytorch=2.0.1
+  - torchvision=0.15.2
+  - torchaudio=2.0.2
+  - cudatoolkit=11.8
+  - pip
