@@ -1,0 +1,28 @@
+Dataset Summary
+==============
+
+Total Images: 15000
+Total Objects: 67914
+Total Classes: 15
+Average Objects per Image: 4.53
+
+Class Distribution:
+  No finding: 31818 (46.9%)
+  Aortic enlargement: 7162 (10.5%)
+  Cardiomegaly: 5427 (8.0%)
+  Pleural thickening: 4842 (7.1%)
+  Pulmonary fibrosis: 4655 (6.9%)
+  Nodule/Mass: 2580 (3.8%)
+  Lung Opacity: 2483 (3.7%)
+  Pleural effusion: 2476 (3.6%)
+  Other lesion: 2203 (3.2%)
+  Infiltration: 1247 (1.8%)
+  ILD: 1000 (1.5%)
+  Calcification: 960 (1.4%)
+  Consolidation: 556 (0.8%)
+  Atelectasis: 279 (0.4%)
+  Pneumothorax: 226 (0.3%)
+
+Average Object Width: 180.99
+Average Object Height: 140.21
+Average Object Area: 31918.41
