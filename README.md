@@ -34,11 +34,8 @@ This tool helps healthcare professionals and researchers quickly analyze medical
 # Clone the repository
 git clone https://github.com/yourusername/computer-vision-healthcare
 
-# Install dependencies
-pip install -r requirements.txt
-
 # Run the application
-python main.py
+python interface.py
 ```
 
 ## Usage
@@ -55,7 +52,3 @@ python main.py
 - Medical image quality assessment
 - Research data analysis
 - Educational medical imaging tools
-
-## License
-
-MIT License
