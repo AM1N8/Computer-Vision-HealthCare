@@ -1,0 +1,5 @@
+Bone Fracture Detection Results
+Generated: 2025-06-05 16:49:55
+Original File: 20250605_164949_x-ray-1.png
+Bone Type: Hand
+Fracture Status: Fractured
