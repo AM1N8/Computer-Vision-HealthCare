@@ -107,14 +107,6 @@ Pour commencer avec les projets Insight Ray, suivez les étapes générales ci-d
 
 Nous accueillons les contributions ! Si vous souhaitez contribuer au projet Insight Ray, veuillez consulter nos `GUIDELINES.md` (à créer) pour plus de détails sur le processus de contribution.
 
-## 📄 Licence
-
-Ce projet est sous licence [Nom de la Licence, par exemple MIT License]. Voir le fichier `LICENSE` (à créer) pour plus de détails.
-
-## ✉️ Contact
-
-Pour toute question ou demande de renseignements, veuillez ouvrir une "Issue" sur ce dépôt GitHub ou contacter [Votre Nom/Email/Organisation].
-
 ---
 
 **Clause de non-responsabilité :** Insight Ray est un outil d'aide au diagnostic et ne remplace pas l'expertise clinique professionnelle. Les résultats générés par l'IA doivent toujours être interprétés et confirmés par des professionnels de la santé qualifiés.
