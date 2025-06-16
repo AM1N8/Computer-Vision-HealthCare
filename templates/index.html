@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Imaging AI Assistant</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --bg-primary: #0a0b0d;
+            --bg-secondary: #111317;
+            --bg-tertiary: #1a1d23;
+            --bg-card: rgba(26, 29, 35, 0.8);
+            --bg-glass: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #a0a8b8;
+            --text-muted: #6b7280;
+            --accent-blue: #00d4ff;
+            --accent-purple: #8b5cf6;
+            --accent-green: #00f5a0;
+            --accent-red: #ff6b6b;
+            --accent-orange: #ff8c00;
+            --shadow-glow: rgba(0, 212, 255, 0.15);
+            --shadow-purple: rgba(139, 92, 246, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 60%, rgba(0, 245, 160, 0.05) 0%, transparent 50%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            border-radius: 24px;
+            box-shadow: 
+                0 32px 64px rgba(0, 0, 0, 0.4),
+                0 0 0 1px var(--border-color),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-blue), transparent);
+            opacity: 0.5;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+            position: relative;
+            padding: 40px;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(139, 92, 246, 0.1));
+            opacity: 0.3;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .header h1 {
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            font-weight: 700;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 40px rgba(0, 212, 255, 0.3);
+            letter-spacing: -0.02em;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+            padding: 40px;
+        }
+
+        .panel {
+            background: var(--bg-glass);
+            border-radius: 20px;
+            padding: 32px;
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(20px);
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent);
+            border-radius: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .panel:hover::before {
+            opacity: 1;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--accent-blue), transparent);
+            margin-left: 16px;
+        }
+
+        .model-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .model-btn {
+            padding: 16px 20px;
+            border: none;
+            border-radius: 16px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .model-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .model-btn:hover::before {
+            left: 100%;
+        }
+
+        .chest-btn {
+            background: linear-gradient(135deg, var(--accent-red), #ff4757);
+            box-shadow: 0 8px 32px rgba(255, 107, 107, 0.3);
+            width: 100%;
+        }
+
+        .bone-btn {
+            background: linear-gradient(135deg, var(--accent-orange), #ffa502);
+            box-shadow: 0 8px 32px rgba(255, 140, 0, 0.3);
+        }
+
+        .model-btn:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .model-btn:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        .model-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .test-model-btn {
+            background: linear-gradient(135deg, var(--accent-purple), #9c88ff);
+            box-shadow: 0 8px 32px var(--shadow-purple);
+            width: 100%;
+            margin-bottom: 32px;
+        }
+
+        .status-indicator {
+            margin-left: 8px;
+            font-size: 0.9rem;
+            filter: drop-shadow(0 0 4px currentColor);
+        }
+
+        .upload-section {
+            border: 2px dashed rgba(0, 212, 255, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 32px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            background: rgba(0, 212, 255, 0.02);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(0, 212, 255, 0.1), transparent);
+            animation: rotate 8s linear infinite;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .upload-section:hover::before {
+            opacity: 1;
+        }
+
+        .upload-section:hover {
+            border-color: var(--accent-blue);
+            background: rgba(0, 212, 255, 0.05);
+            transform: scale(1.02);
+            box-shadow: 0 16px 40px rgba(0, 212, 255, 0.15);
+        }
+
+        .upload-section.dragover {
+            border-color: var(--accent-green);
+            background: rgba(0, 245, 160, 0.1);
+            transform: scale(1.05);
+        }
+
+        @keyframes rotate {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .upload-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .upload-icon {
+            font-size: 3.5rem;
+            margin-bottom: 16px;
+            filter: drop-shadow(0 0 20px var(--accent-blue));
+        }
+
+        .upload-text {
+            font-size: 1.2rem;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .upload-subtext {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .model-selector {
+            margin-bottom: 24px;
+        }
+
+        .model-selector label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+        }
+
+        .model-selector select {
+            width: 100%;
+            padding: 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 1rem;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .model-selector select:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+        }
+
+        .analyze-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--accent-green), #00d084);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 245, 160, 0.3);
+        }
+
+        .analyze-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .analyze-btn:hover::before {
+            left: 100%;
+        }
+
+        .analyze-btn:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 16px 40px rgba(0, 245, 160, 0.4);
+        }
+
+        .analyze-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .results-section {
+            margin-top: 32px;
+        }
+
+        .results-content {
+            background: var(--bg-tertiary);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(20px);
+            min-height: 200px;
+        }
+
+        .prediction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            margin-bottom: 12px;
+            background: var(--bg-glass);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .prediction-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, var(--accent-blue), var(--accent-purple));
+            border-radius: 0 2px 2px 0;
+        }
+
+        .prediction-item:hover {
+            transform: translateX(4px);
+            background: rgba(0, 212, 255, 0.05);
+        }
+
+        .prediction-label {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .prediction-confidence {
+            font-weight: 700;
+            color: var(--accent-green);
+            font-size: 1.1rem;
+        }
+
+        .image-preview {
+            margin-top: 24px;
+            text-align: center;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            max-height: 500px;
+            border-radius: 16px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+            margin-bottom: 16px;
+            border: 1px solid var(--border-color);
+        }
+
+        .image-toggle {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .toggle-btn {
+            padding: 12px 24px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+        }
+
+        .toggle-btn.active {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 8px 32px var(--shadow-glow);
+        }
+
+        .toggle-btn:hover:not(.active) {
+            background: var(--bg-glass);
+            color: var(--text-primary);
+        }
+
+        .loading {
+            text-align: center;
+            color: var(--accent-blue);
+            font-style: italic;
+            padding: 40px;
+            font-size: 1.1rem;
+        }
+
+        .error {
+            color: var(--accent-red);
+            background: rgba(255, 107, 107, 0.1);
+            padding: 16px;
+            border-radius: 12px;
+            margin: 16px 0;
+            border: 1px solid rgba(255, 107, 107, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .success {
+            color: var(--accent-green);
+            background: rgba(0, 245, 160, 0.1);
+            padding: 16px;
+            border-radius: 12px;
+            margin: 16px 0;
+            border: 1px solid rgba(0, 245, 160, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--accent-blue);
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Floating particles animation */
+        .floating-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--accent-blue);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.3;
+            }
+            90% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(-100px) translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        /* Responsive design */
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 24px;
+                padding: 24px;
+            }
+            
+            .model-controls {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .panel {
+                padding: 24px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 12px;
+            }
+
+            .container {
+                border-radius: 16px;
+            }
+
+            .header {
+                padding: 24px;
+            }
+
+            .main-content {
+                padding: 16px;
+            }
+
+            .panel {
+                padding: 20px;
+            }
+
+            .upload-section {
+                padding: 24px;
+            }
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-blue);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-purple);
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating particles background -->
+    <div class="floating-particles" id="particles"></div>
+
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <h1>🏥 Insight Ray</h1>
+                <p>Advanced chest X-ray and bone fracture detection with visual annotations</p>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="panel">
+                <h2 class="section-title">🤖 Model Management</h2>
+                
+                <div class="model-controls">
+                    <button class="model-btn chest-btn" onclick="loadModel('chest')">
+                        Load Chest Model
+                        <span class="status-indicator" id="chestStatus">❌</span>
+                    </button>
+                    
+                </div>
+
+                <button class="model-btn test-model-btn" onclick="testModel()">
+                    🧪 Test Chest Model
+                </button>
+
+                <h2 class="section-title">📁 Image Upload</h2>
+                
+                <div class="upload-section" onclick="document.getElementById('fileInput').click()">
+                    <div class="upload-content">
+                        <div class="upload-icon">📤</div>
+                        <div class="upload-text">Drop image here or click to browse</div>
+                        <div class="upload-subtext">Supports PNG, JPG, JPEG (Max 16MB)</div>
+                    </div>
+                </div>
+                
+                <input type="file" id="fileInput" class="file-input" accept=".png,.jpg,.jpeg" onchange="handleFileSelect(event)">
+                
+                <div class="model-selector">
+                    <label for="modelType">Analysis Type:</label>
+                    <select id="modelType">
+                        <option value="chest">Chest X-ray (YOLO Detection)</option>
+                        
+                    </select>
+                </div>
+                
+                <button class="analyze-btn" id="analyzeBtn" onclick="analyzeImage()" disabled>
+                    Analyze Image
+                </button>
+            </div>
+
+            <div class="panel">
+                <h2 class="section-title">📊 Analysis Results</h2>
+                
+                <div class="results-section">
+                    <div class="results-content" id="resultsContent">
+                        <div class="loading" style="display: none;" id="loadingIndicator">
+                            <div class="loading-spinner"></div>
+                            Analyzing image...
+                        </div>
+                        <div id="resultsDisplay">
+                            Upload and analyze an image to see results here.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="image-preview" id="imagePreview" style="display: none;">
+                    <div class="image-toggle" id="imageToggle" style="display: none;">
+                        <button class="toggle-btn active" onclick="toggleImage('original')">Original</button>
+                        <button class="toggle-btn" onclick="toggleImage('annotated')">With Detections</button>
+                    </div>
+                    <img id="previewImage" alt="Analysis Preview">
+                    <p id="imageCaption"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedFile = null;
+        let originalImageData = null;
+        let annotatedImageData = null;
+        let currentImageView = 'original';
+
+        // Initialize floating particles
+        function createFloatingParticles() {
+            const container = document.getElementById('particles');
+            const particleCount = window.innerWidth > 768 ? 50 : 25;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                
+                const colors = ['#00d4ff', '#8b5cf6', '#00f5a0'];
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                
+                container.appendChild(particle);
+            }
+        }
+
+        // Check model status on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            createFloatingParticles();
+            updateModelStatus();
+            setupDragAndDrop();
+            addWelcomeMessage();
+        });
+
+        function updateModelStatus() {
+            fetch('/model_status')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('chestStatus').textContent = data.chest_loaded ? '✅' : '❌';
+                    document.getElementById('boneStatus').textContent = data.bone_loaded ? '✅' : '❌';
+                })
+                .catch(error => {
+                    console.error('Error checking model status:', error);
+                });
+        }
+
+        function setupDragAndDrop() {
+            const uploadSection = document.querySelector('.upload-section');
+            
+            uploadSection.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.classList.add('dragover');
+            });
+
+            uploadSection.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                this.classList.remove('dragover');
+            });
+
+            uploadSection.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('dragover');
+                
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    const file = files[0];
+                    if (file.type.startsWith('image/')) {
+                        selectedFile = file;
+                        handleFileSelection(file);
+                    } else {
+                        showMessage('Please select an image file (PNG, JPG, JPEG)', 'error');
+                    }
+                }
+            });
+        }
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                selectedFile = file;
+                handleFileSelection(file);
+            }
+        }
+
+        function handleFileSelection(file) {
+            // Enable analyze button
+            document.getElementById('analyzeBtn').disabled = false;
+            
+            // Update upload section text
+            const uploadSection = document.querySelector('.upload-section');
+            uploadSection.innerHTML = `
+                <div class="upload-content">
+                    <div class="upload-icon">✅</div>
+                    <div class="upload-text">Selected: ${file.name}</div>
+                    <div class="upload-subtext">File size: ${(file.size / 1024 / 1024).toFixed(2)} MB</div>
+                </div>
+            `;
+            
+            // Clear previous results
+            document.getElementById('resultsDisplay').innerHTML = 'Ready to analyze image.';
+            document.getElementById('imagePreview').style.display = 'none';
+        }
+
+        function loadModel(modelType) {
+            const button = event.target;
+            const originalText = button.innerHTML;
+            
+            button.disabled = true;
+            button.innerHTML = modelType === 'chest' ? 
+                '<div class="loading-spinner"></div>Loading Chest Model...' : 
+                '<div class="loading-spinner"></div>Loading Bone Model...';
+            
+            fetch('/load_models', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({model_type: modelType})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showMessage(data.message, 'success');
+                    updateModelStatus();
+                } else {
+                    showMessage(data.message, 'error');
+                }
+            })
+            .catch(error => {
+                showMessage('Error loading model: ' + error.message, 'error');
+            })
+            .finally(() => {
+                button.disabled = false;
+                button.innerHTML = originalText;
+            });
+        }
+
+        function testModel() {
+            const button = event.target;
+            const originalText = button.innerHTML;
+            
+            button.disabled = true;
+            button.innerHTML = '<div class="loading-spinner"></div>🧪 Testing Model...';
+            
+            fetch('/test_model', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showMessage('✅ Model test successful: ' + data.message, 'success');
+                    console.log('Model info:', data.model_info);
+                } else {
+                    showMessage('❌ Model test failed: ' + data.message, 'error');
+                    console.error('Test error:', data);
+                }
+            })
+            .catch(error => {
+                showMessage('❌ Test request failed: ' + error.message, 'error');
+                console.error('Network error:', error);
+            })
+            .finally(() => {
+                button.disabled = false;
+                button.innerHTML = originalText;
+            });
+        }
+
+        function analyzeImage() {
+            if (!selectedFile) {
+                showMessage('Please select an image first', 'error');
+                return;
+            }
+
+            const modelType = document.getElementById('modelType').value;
+            const analyzeBtn = document.getElementById('analyzeBtn');
+            
+            // Show loading state
+            analyzeBtn.disabled = true;
+            analyzeBtn.innerHTML = '<div class="loading-spinner"></div>Analyzing...';
+            document.getElementById('loadingIndicator').style.display = 'block';
+            document.getElementById('resultsDisplay').style.display = 'none';
+
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            formData.append('model_type', modelType);
+
+            fetch('/predict', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Analysis response:', data);
+                displayResults(data);
+            })
+            .catch(error => {
+                console.error('Analysis error:', error);
+                showMessage('Error during analysis: ' + error.message, 'error');
+                document.getElementById('resultsDisplay').innerHTML = `
+                    <div class="error">
+                        <strong>Analysis Failed:</strong><br>
+                        ${error.message}<br><br>
+                        <strong>Troubleshooting:</strong><br>
+                        1. Make sure the YOLO model is properly loaded<br>
+                        2. Try the "Test Chest Model" button first<br>
+                        3. Check browser console for detailed errors<br>
+                        4. Verify your model file format (.pt for YOLO)
+                    </div>
+                `;
+            })
+            .finally(() => {
+                analyzeBtn.disabled = false;
+                analyzeBtn.textContent = 'Analyze Image';
+                document.getElementById('loadingIndicator').style.display = 'none';
+                document.getElementById('resultsDisplay').style.display = 'block';
+            });
+        }
+
+        function displayResults(data) {
+            const resultsDisplay = document.getElementById('resultsDisplay');
+            
+            if (data.status === 'error') {
+                resultsDisplay.innerHTML = `<div class="error">${data.message}</div>`;
+                return;
+            }
+
+            let resultsHTML = '';
+
+            if (data.model_type === 'chest') {
+                resultsHTML = '<h3>🫁 Chest X-ray Analysis Results</h3>';
+                
+                if (data.predictions && data.predictions.length > 0) {
+                    resultsHTML += '<div style="margin-top: 20px;">';
+                    data.predictions.forEach(([label, confidence]) => {
+                        const confidencePercent = (confidence * 100).toFixed(1);
+                        resultsHTML += `
+                            <div class="prediction-item">
+                                <span class="prediction-label">${label}</span>
+                                <span class="prediction-confidence">${confidencePercent}%</span>
+                            </div>
+                        `;
+                    });
+                    resultsHTML += '</div>';
+                } else {
+                    resultsHTML += '<p style="color: var(--text-secondary); margin-top: 16px;">No significant findings detected.</p>';
+                }
+
+                // Store image data for toggle functionality
+                originalImageData = data.original_image;
+                annotatedImageData = data.annotated_image;
+                
+                // Show image preview with toggle
+                showImagePreview(originalImageData, 'Original chest X-ray');
+                document.getElementById('imageToggle').style.display = 'flex';
+                
+            } else if (data.model_type === 'bone') {
+                resultsHTML = '<h3>🦴 Bone Fracture Analysis Results</h3>';
+                
+                resultsHTML += `
+                    <div style="margin-top: 20px;">
+                        <div class="prediction-item">
+                            <span class="prediction-label">Detected Bone Type</span>
+                            <span class="prediction-confidence">${data.bone_type.toUpperCase()}</span>
+                        </div>
+                        <div class="prediction-item">
+                            <span class="prediction-label">Bone Detection Confidence</span>
+                            <span class="prediction-confidence">${(data.bone_confidence * 100).toFixed(1)}%</span>
+                        </div>
+                        <div class="prediction-item">
+                            <span class="prediction-label">Fracture Status</span>
+                            <span class="prediction-confidence" style="color: ${data.is_fractured ? 'var(--accent-red)' : 'var(--accent-green)'}">
+                                ${data.is_fractured ? '⚠️ FRACTURE DETECTED' : '✅ NO FRACTURE'}
+                            </span>
+                        </div>
+                        <div class="prediction-item">
+                            <span class="prediction-label">Fracture Confidence</span>
+                            <span class="prediction-confidence">${(data.fracture_confidence * 100).toFixed(1)}%</span>
+                        </div>
+                    </div>
+                `;
+
+                // Show original image only for bone analysis
+                originalImageData = data.original_image;
+                showImagePreview(originalImageData, `${data.bone_type.toUpperCase()} X-ray - ${data.is_fractured ? 'Fracture Detected' : 'No Fracture'}`);
+                document.getElementById('imageToggle').style.display = 'none';
+            }
+
+            resultsDisplay.innerHTML = resultsHTML;
+        }
+
+        function showImagePreview(imageData, caption) {
+            const imagePreview = document.getElementById('imagePreview');
+            const previewImage = document.getElementById('previewImage');
+            const imageCaption = document.getElementById('imageCaption');
+            
+            previewImage.src = imageData;
+            imageCaption.textContent = caption;
+            imageCaption.style.color = 'var(--text-secondary)';
+            imageCaption.style.marginTop = '12px';
+            imagePreview.style.display = 'block';
+        }
+
+        function toggleImage(viewType) {
+            if (viewType === 'original' && originalImageData) {
+                showImagePreview(originalImageData, 'Original chest X-ray');
+                currentImageView = 'original';
+            } else if (viewType === 'annotated' && annotatedImageData) {
+                showImagePreview(annotatedImageData, 'Chest X-ray with AI detections');
+                currentImageView = 'annotated';
+            }
+            
+            // Update button states
+            document.querySelectorAll('.toggle-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        function addWelcomeMessage() {
+            // This function can be used for chat functionality if needed
+            console.log('Welcome to Insight Ray - Medical AI Assistant');
+        }
+
+        function showMessage(message, type) {
+            const resultsDisplay = document.getElementById('resultsDisplay');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = type;
+            messageDiv.innerHTML = message;
+            
+            resultsDisplay.insertBefore(messageDiv, resultsDisplay.firstChild);
+            
+            // Remove message after 5 seconds
+            setTimeout(() => {
+                if (messageDiv.parentNode) {
+                    messageDiv.parentNode.removeChild(messageDiv);
+                }
+            }, 5000);
+        }
+
+        // Auto-refresh model status every 10 seconds
+        setInterval(updateModelStatus, 10000);
+
+        // Add smooth scroll behavior
+        document.documentElement.style.scrollBehavior = 'smooth';
+
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case 'u':
+                        e.preventDefault();
+                        document.getElementById('fileInput').click();
+                        break;
+                    case 'Enter':
+                        e.preventDefault();
+                        if (!document.getElementById('analyzeBtn').disabled) {
+                            analyzeImage();
+                        }
+                        break;
+                }
+            }
+        });
+
+        // Add hover effects for interactive elements
+        document.querySelectorAll('.model-btn, .analyze-btn, .toggle-btn').forEach(btn => {
+            btn.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px) scale(1.02)';
+            });
+            
+            btn.addEventListener('mouseleave', function() {
+                if (!this.disabled && !this.classList.contains('active')) {
+                    this.style.transform = 'translateY(0) scale(1)';
+                }
+            });
+        });
+
+        // Add loading animation to results when analyzing
+        function showLoadingResults() {
+            const resultsDisplay = document.getElementById('resultsDisplay');
+            resultsDisplay.innerHTML = `
+                <div style="text-align: center; padding: 40px;">
+                    <div class="loading-spinner" style="width: 40px; height: 40px; margin: 0 auto 20px;"></div>
+                    <p style="color: var(--accent-blue); font-size: 1.1rem;">Analyzing your medical image...</p>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 8px;">This may take a few moments</p>
+                </div>
+            `;
+        }
+
+        // Enhanced file validation
+        function validateFile(file) {
+            const maxSize = 16 * 1024 * 1024; // 16MB
+            const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+            
+            if (!allowedTypes.includes(file.type)) {
+                showMessage('Please select a valid image file (PNG, JPG, JPEG)', 'error');
+                return false;
+            }
+            
+            if (file.size > maxSize) {
+                showMessage('File size must be less than 16MB', 'error');
+                return false;
+            }
+            
+            return true;
+        }
+
+        // Update file selection handler with validation
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file && validateFile(file)) {
+                selectedFile = file;
+                handleFileSelection(file);
+            }
+        }
+
+        // Add visual feedback for successful operations
+        function showSuccessAnimation(element) {
+            element.style.animation = 'pulse 0.6s ease-in-out';
+            setTimeout(() => {
+                element.style.animation = '';
+            }, 600);
+        }
+
+        // Add pulse animation to CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes pulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.05); }
+                100% { transform: scale(1); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
