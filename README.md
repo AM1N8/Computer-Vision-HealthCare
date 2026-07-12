@@ -1,8 +1,8 @@
-# 💡 Insight Ray: Une Suite d'IA Médicale Avancée
+#  Insight Ray: Une Suite d'IA Médicale Avancée
 
 Bienvenue au projet Insight Ray ! Il s'agit d'une suite de solutions d'intelligence artificielle conçues pour transformer l'analyse d'images médicales et l'assistance diagnostique. En tirant parti de modèles d'apprentissage profond et de techniques NLP, Insight Ray vise à améliorer la précision, la rapidité et l'efficacité des diagnostics médicaux, en offrant un soutien inestimable aux professionnels de la santé.
 
-## 🚀 Projets Inclus
+##  Projets Inclus
 
 Insight Ray est composé de trois projets distincts mais complémentaires :
 
@@ -58,7 +58,7 @@ Un chatbot interactif conçu pour aider les utilisateurs à identifier des malad
 
 **Documentation détaillée :** Consulter `docs/chatbot.rst` pour plus d'informations.
 
-## 🚀 Démarrage Rapide
+##  Démarrage Rapide
 
 Pour commencer avec les projets Insight Ray, suivez les étapes générales ci-dessous. Pour des instructions spécifiques à chaque projet, veuillez consulter les fichiers RST correspondants dans le répertoire `docs/`.
 
@@ -103,7 +103,7 @@ Pour commencer avec les projets Insight Ray, suivez les étapes générales ci-d
    
    Suivez les instructions spécifiques du fichier RST de chaque projet pour lancer l'application (par exemple, `python app.py` pour le chatbot ou la détection des fractures, ou le script d'entraînement/inférence pour la détection des radiographies pulmonaires).
 
-## 🤝 Contribution
+##  Contribution
 
 Nous accueillons les contributions ! Si vous souhaitez contribuer au projet Insight Ray, veuillez consulter nos `GUIDELINES.md` (à créer) pour plus de détails sur le processus de contribution.
 
